@@ -1,18 +1,19 @@
 import multiprocessing
 import time
 from arduinoComms import arduinoComms
+from motorControl import motorControl
 
-def inputSimulator(motorSpeed1, motorSpeed2, motorSpeed3, motorSpeed4, encoderValue1, encoderValue2, encoderValue3, encoderValue4):
+def inputSimulator(motorController):
+    initialTime = time.time()
+
     while True: 
-        motorSpeed1.value = - motorSpeed1.value
-        motorSpeed2.value = - motorSpeed2.value
-        motorSpeed3.value = - motorSpeed3.value
-        motorSpeed4.value = - motorSpeed4.value
+        if (time.time()-initialTime>3):
+            motorController.writeTargetSteps([5000, 5000, 0, 0])
+            initialTime = time.time()
 
-        print(f'motor speeds: {motorSpeed1.value}, {motorSpeed2.value}, {motorSpeed3.value}, {motorSpeed4.value}')
-
-        print(f'encoder readings: {encoderValue1.value}, {encoderValue2.value}, {encoderValue3.value}, {encoderValue4.value}')
-        time.sleep(1)
+        readings = motorController.readCurrentSteps()
+        print(f'current steps: {readings[0]}, {readings[1]}, {readings[2]}, {readings[3]}')
+        time.sleep(0.5)
 
 if __name__ == "__main__":
     #declaring serial variables
@@ -20,20 +21,22 @@ if __name__ == "__main__":
     baud_rate = 115200
     
     #declaring multiprocessing variables
-    motorSpeed1 = multiprocessing.Value('i', 150)
-    motorSpeed2 = multiprocessing.Value('i', 150)
-    motorSpeed3 = multiprocessing.Value('i', 150)
-    motorSpeed4 = multiprocessing.Value('i', 150)
-    encoderValue1 = multiprocessing.Value('l', 0)
-    encoderValue2 = multiprocessing.Value('l', 0)
-    encoderValue3 = multiprocessing.Value('l', 0)
-    encoderValue4 = multiprocessing.Value('l', 0)
+    sendTarget = multiprocessing.Value('i', False)
+    targetStep1 = multiprocessing.Value('i', 0)
+    targetStep2 = multiprocessing.Value('i', 0)
+    targetStep3 = multiprocessing.Value('i', 0)
+    targetStep4 = multiprocessing.Value('i', 0)
+    currentStep1 = multiprocessing.Value('i', 0)
+    currentStep2 = multiprocessing.Value('i', 0)
+    currentStep3 = multiprocessing.Value('i', 0)
+    currentStep4 = multiprocessing.Value('i', 0)
 
     #declare class objects
-    arduinoCommunication = arduinoComms(port, baud_rate, motorSpeed1, motorSpeed2, motorSpeed3, motorSpeed4, encoderValue1, encoderValue2, encoderValue3, encoderValue4)
+    arduinoCommunication = arduinoComms(port, baud_rate, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
+    motorController = motorControl(sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
 
     process1 = multiprocessing.Process(target=arduinoCommunication.maintainCommunications)
-    process2 = multiprocessing.Process(target=inputSimulator, args= (motorSpeed1, motorSpeed2, motorSpeed3, motorSpeed4, encoderValue1, encoderValue2, encoderValue3, encoderValue4))
+    process2 = multiprocessing.Process(target=inputSimulator, args= (motorController,))
     
     process1.start()
     process2.start()

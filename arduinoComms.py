@@ -3,17 +3,18 @@ import time
 import numpy as np
 
 class arduinoComms:
-    def __init__(self, port, baud, motorSpeed1, motorSpeed2, motorSpeed3, motorSpeed4, encoderValue1, encoderValue2, encoderValue3, encoderValue4):
+    def __init__(self, port, baud, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4):
         self.port = port
         self.baud = baud
-        self.motorSpeed1 = motorSpeed1
-        self.motorSpeed2 = motorSpeed2
-        self.motorSpeed3 = motorSpeed3
-        self.motorSpeed4 = motorSpeed4
-        self.encoderValue1 = encoderValue1
-        self.encoderValue2 = encoderValue2
-        self.encoderValue3 = encoderValue3
-        self.encoderValue4 = encoderValue4
+        self.sendTarget = sendTarget
+        self.targetStep1 = targetStep1
+        self.targetStep2 = targetStep2
+        self.targetStep3 = targetStep3
+        self.targetStep4 = targetStep4
+        self.currentStep1 = currentStep1
+        self.currentStep2 = currentStep2
+        self.currentStep3 = currentStep3
+        self.currentStep4 = currentStep4
 
         #declared constants
         self.serial_delay = 0.001
@@ -37,25 +38,21 @@ class arduinoComms:
 
     def updateMotors(self):
         #send motor values
-        motorSpeedString = [0, 0, 0, 0]
-        motorSpeedString[0]= self.motorSpeed1.value
-        motorSpeedString[1]= self.motorSpeed2.value
-        motorSpeedString[2]= self.motorSpeed3.value
-        motorSpeedString[3]= self.motorSpeed4.value
-
-        for element in motorSpeedString:
-            if (element < 0):
-                element = 0
-            if (element > 255):
-                element = 255
-        self.sendString(motorSpeedString)
+        if self.sendTarget.value:
+            self.sendTarget.value = False
+            targetStepString = [0, 0, 0, 0]
+            targetStepString[0]= self.targetStep1.value
+            targetStepString[1]= self.targetStep2.value
+            targetStepString[2]= self.targetStep3.value
+            targetStepString[3]= self.targetStep4.value
+            self.sendString(targetStepString)
 
         #read encoder values
         receivedValues = self.readString()
-        self.encoderValue1.value = receivedValues[0]
-        self.encoderValue2.value = receivedValues[1]
-        self.encoderValue3.value = receivedValues[2]
-        self.encoderValue4.value = receivedValues[3]
+        self.currentStep1.value = receivedValues[0]
+        self.currentStep2.value = receivedValues[1]
+        self.currentStep3.value = receivedValues[2]
+        self.currentStep4.value = receivedValues[3]
 
     def maintainCommunications(self):
         ser=serial.Serial(self.port, self.baud, timeout=1)
@@ -63,26 +60,50 @@ class arduinoComms:
         
         while True:
             #send motor values
-            motorSpeedString = [0, 0, 0, 0]
-            motorSpeedString[0]= self.motorSpeed1.value
-            motorSpeedString[1]= self.motorSpeed2.value
-            motorSpeedString[2]= self.motorSpeed3.value
-            motorSpeedString[3]= self.motorSpeed4.value
-
-            for element in motorSpeedString:
-                if (element < -255):
-                    element = 0
-                if (element > 255):
-                    element = 255
-            self.sendString(ser, motorSpeedString)
+            if self.sendTarget.value:
+                self.sendTarget.value = False
+                targetStepString = [0, 0, 0, 0]
+                targetStepString[0]= self.targetStep1.value
+                targetStepString[1]= self.targetStep2.value
+                targetStepString[2]= self.targetStep3.value
+                targetStepString[3]= self.targetStep4.value
+                self.sendString(ser, targetStepString)
+                receivedValues = self.readString(ser)
+                self.passChecker(targetStepString, receivedValues)
 
             #read encoder values
             receivedValues = self.readString(ser)
-            self.encoderValue1.value = receivedValues[0]
-            self.encoderValue2.value = receivedValues[1]
-            self.encoderValue3.value = receivedValues[2]
-            self.encoderValue4.value = receivedValues[3]
-
+            self.currentStep1.value = receivedValues[0]
+            self.currentStep2.value = receivedValues[1]
+            self.currentStep3.value = receivedValues[2]
+            self.currentStep4.value = receivedValues[3]
+    
+    def passChecker(self, targetStepString, receivedValues):
+        print('pass checker values:')
+        print(targetStepString)
+        print(receivedValues)
+        #margin of error, should be zero ideally
+        margin = 5
+        #checks if the values were written correctly, if incorrect, resends
+        if (abs(targetStepString[0]-receivedValues[0])>margin):
+            print('target step was written incorrectly!')
+            self.sendTarget.value = True
+            return False
+        if (abs(targetStepString[1]-receivedValues[1])>margin):
+            print('target step was written incorrectly!')
+            self.sendTarget.value = True
+            return False
+        if (abs(targetStepString[2]-receivedValues[2])>margin):
+            print('target step was written incorrectly!')
+            self.sendTarget.value = True
+            return False
+        if (abs(targetStepString[3]-receivedValues[3])>margin):
+            print('target step was written incorrectly!')
+            self.sendTarget.value = True
+            return False
+        
+        #if it reaches here, then the sent and received steps agree within margin
+        return True
 
 
         

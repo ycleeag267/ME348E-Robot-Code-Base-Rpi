@@ -8,7 +8,7 @@ def inputSimulator(motorController):
 
     while True: 
         if (time.time()-initialTime>3):
-            motorController.writeTargetSteps([5000, 5000, 0, 0])
+            motorController.writeTargetSteps([5000, 5000, 5000, 5000])
             initialTime = time.time()
 
         readings = motorController.readCurrentSteps()

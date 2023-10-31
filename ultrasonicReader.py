@@ -1,6 +1,7 @@
 #Libraries
 import RPi.GPIO as GPIO
 import time
+from func_timeout import FunctionTimedOut, func_timeout
 
 class ultrasonicReader:
     def __init__(self, GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance):
@@ -41,5 +42,11 @@ class ultrasonicReader:
 
     def iterateSensor(self):
         while True:
-            self.ultrasonicDistance.value = self.readSensor()
+            try:
+                self.ultrasonicDistance.value = func_timeout(0.1, self.readSensor)
+                print(self.ultrasonicDistance.value)
             # possibly delay here to allow for reasonable mutex acquisition
+            except FunctionTimedOut:
+                print("Function timed out.")
+            except Exception as e:
+                print(f"Function raised an exception: {e}")

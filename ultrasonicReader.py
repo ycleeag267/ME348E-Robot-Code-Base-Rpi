@@ -3,9 +3,11 @@ import RPi.GPIO as GPIO
 import time
 
 class ultrasonicReader:
-    def __init__(self, GPIO_TRIGGER, GPIO_ECHO):
+    def __init__(self, GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance):
         self.GPIO_TRIGGER = GPIO_TRIGGER
         self.GPIO_ECHO = GPIO_ECHO
+        self.ultrasonicDistance = ultrasonicDistance
+
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.GPIO_TRIGGER, GPIO.OUT)
         GPIO.setup(self.GPIO_ECHO, GPIO.IN)
@@ -36,3 +38,8 @@ class ultrasonicReader:
         distance = (TimeElapsed * 34300) / 2
     
         return distance
+
+    def iterateSensor(self):
+        while True:
+            self.ultrasonicDistance.value = self.readSensor()
+            # possibly delay here to allow for reasonable mutex acquisition

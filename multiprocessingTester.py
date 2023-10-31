@@ -15,7 +15,7 @@ def inputSimulator(motorController, ultrasonicSensor):
         readings = motorController.readCurrentSteps()
         print(f'current steps: {readings[0]}, {readings[1]}, {readings[2]}, {readings[3]}')
         print(f'ultrasonic distance reading: {ultrasonicSensor.value}')
-        time.sleep(0.1)
+        time.sleep(1)
 
 if __name__ == "__main__":
     #declaring serial variables
@@ -43,12 +43,14 @@ if __name__ == "__main__":
     motorController = motorControl(sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
     ultrasonicSensor = ultrasonicReader(GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance)
 
-    process1 = multiprocessing.Process(target=arduinoCommunication.maintainCommunications)
+    #process1 = multiprocessing.Process(target=arduinoCommunication.maintainCommunications)
     process2 = multiprocessing.Process(target=inputSimulator, args= (motorController, ultrasonicDistance))
     process3 = multiprocessing.Process(target=ultrasonicSensor.iterateSensor)
     
-    process1.start()
+    #process1.start()
     process2.start()
+    process3.start()
 
-    process1.join()
+    #process1.join()
     process2.join()
+    process3.join()

@@ -42,4 +42,6 @@ class ultrasonicReader:
     def iterateSensor(self):
         while True:
             self.ultrasonicDistance.value = self.readSensor()
+            print(self.readSensor())
+            time.sleep(0.1)
             # possibly delay here to allow for reasonable mutex acquisition

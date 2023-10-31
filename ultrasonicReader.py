@@ -45,8 +45,10 @@ class ultrasonicReader:
             try:
                 self.ultrasonicDistance.value = func_timeout(0.1, self.readSensor)
                 print(self.ultrasonicDistance.value)
+                time.sleep(0.1)
             # possibly delay here to allow for reasonable mutex acquisition
             except FunctionTimedOut:
                 print("Function timed out.")
             except Exception as e:
                 print(f"Function raised an exception: {e}")
+

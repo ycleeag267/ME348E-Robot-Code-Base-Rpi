@@ -8,12 +8,12 @@ def inputSimulator(motorController):
 
     while True: 
         if (time.time()-initialTime>3):
-            motorController.writeTargetSteps([5000, 5000, 5000, 5000])
+            motorController.writeTargetSteps([1000, 1000, 1000, 1000])
             initialTime = time.time()
 
         readings = motorController.readCurrentSteps()
         print(f'current steps: {readings[0]}, {readings[1]}, {readings[2]}, {readings[3]}')
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     #declaring serial variables

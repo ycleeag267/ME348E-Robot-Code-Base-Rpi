@@ -72,11 +72,14 @@ class arduinoComms:
                 self.passChecker(targetStepString, receivedValues)
 
             #read encoder values
-            receivedValues = self.readString(ser)
-            self.currentStep1.value = receivedValues[0]
-            self.currentStep2.value = receivedValues[1]
-            self.currentStep3.value = receivedValues[2]
-            self.currentStep4.value = receivedValues[3]
+            try:
+                receivedValues = self.readString(ser)
+                self.currentStep1.value = receivedValues[0]
+                self.currentStep2.value = receivedValues[1]
+                self.currentStep3.value = receivedValues[2]
+                self.currentStep4.value = receivedValues[3]
+            except:
+                pass
     
     def passChecker(self, targetStepString, receivedValues):
         print('pass checker values:')

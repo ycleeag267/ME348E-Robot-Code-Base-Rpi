@@ -9,18 +9,19 @@ def inputSimulator(motorController, ultrasonicSensor):
 
     while True: 
         if (time.time()-initialTime>3):
-            motorController.writeTargetSteps([1000, 1000, 1000, 1000])
+            #motorController.writeTargetSteps([1000, 1000, 1000, 1000])
+            motorController.moveRight (1000)
             initialTime = time.time()
 
         readings = motorController.readCurrentSteps()
         print(f'current steps: {readings[0]}, {readings[1]}, {readings[2]}, {readings[3]}')
-        print(f'ultrasonic distance reading: {ultrasonicSensor.value}')
+        # print(f'ultrasonic distance reading: {ultrasonicSensor.value}')
         time.sleep(1)
 
 if __name__ == "__main__":
     #declaring serial variables
     # port = 'COM4'   #For PC
-    port = '/dev/ttyACM0'   #For Rpi
+    port = '/dev/ttyACM3'   #For Rpi
     baud_rate = 115200
 
     #declaring sensor variables
@@ -42,16 +43,16 @@ if __name__ == "__main__":
     #declare class objects
     arduinoCommunication = arduinoComms(port, baud_rate, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
     motorController = motorControl(sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
-    ultrasonicSensor = ultrasonicReader(GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance)
+    # ultrasonicSensor = ultrasonicReader(GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance)
 
     process1 = multiprocessing.Process(target=arduinoCommunication.maintainCommunications)
     process2 = multiprocessing.Process(target=inputSimulator, args= (motorController, ultrasonicDistance))
-    process3 = multiprocessing.Process(target=ultrasonicSensor.iterateSensor)
+    # process3 = multiprocessing.Process(target=ultrasonicSensor.iterateSensor)
     
     process1.start()
     process2.start()
-    process3.start()
+    # process3.start()
 
     process1.join()
     process2.join()
-    process3.join()
+    # process3.join()

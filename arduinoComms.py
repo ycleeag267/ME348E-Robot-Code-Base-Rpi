@@ -68,6 +68,7 @@ class arduinoComms:
                 targetStepString[2]= self.targetStep3.value
                 targetStepString[3]= self.targetStep4.value
                 self.sendString(ser, targetStepString)
+                time.sleep(0.01)
                 receivedValues = self.readString(ser)
                 self.passChecker(targetStepString, receivedValues)
 
@@ -82,26 +83,26 @@ class arduinoComms:
                 pass
     
     def passChecker(self, targetStepString, receivedValues):
-        print('pass checker values:')
-        print(targetStepString)
-        print(receivedValues)
+        # print('pass checker values:')
+        # print(targetStepString)
+        # print(receivedValues)
         #margin of error, should be zero ideally
         margin = 5
         #checks if the values were written correctly, if incorrect, resends
         if (abs(targetStepString[0]-receivedValues[0])>margin):
-            print('target step was written incorrectly!')
+            # print('target step was written incorrectly!')
             self.sendTarget.value = True
             return False
         if (abs(targetStepString[1]-receivedValues[1])>margin):
-            print('target step was written incorrectly!')
+            # print('target step was written incorrectly!')
             self.sendTarget.value = True
             return False
         if (abs(targetStepString[2]-receivedValues[2])>margin):
-            print('target step was written incorrectly!')
+            # print('target step was written incorrectly!')
             self.sendTarget.value = True
             return False
         if (abs(targetStepString[3]-receivedValues[3])>margin):
-            print('target step was written incorrectly!')
+            # print('target step was written incorrectly!')
             self.sendTarget.value = True
             return False
         

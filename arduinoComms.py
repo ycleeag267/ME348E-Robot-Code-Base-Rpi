@@ -58,29 +58,35 @@ class arduinoComms:
         ser=serial.Serial(self.port, self.baud, timeout=1)
         print('serial connected')
         
-        while True:
-            #send motor values
-            if self.sendTarget.value:
-                self.sendTarget.value = False
-                targetStepString = [0, 0, 0, 0]
-                targetStepString[0]= self.targetStep1.value
-                targetStepString[1]= self.targetStep2.value
-                targetStepString[2]= self.targetStep3.value
-                targetStepString[3]= self.targetStep4.value
-                self.sendString(ser, targetStepString)
-                time.sleep(0.01)
-                receivedValues = self.readString(ser)
-                self.passChecker(targetStepString, receivedValues)
+        try:
+            while True:
+                #send motor values
+                if self.sendTarget.value:
+                    self.sendTarget.value = False
+                    targetStepString = [0, 0, 0, 0]
+                    targetStepString[0]= self.targetStep1.value
+                    targetStepString[1]= self.targetStep2.value
+                    targetStepString[2]= self.targetStep3.value
+                    targetStepString[3]= self.targetStep4.value
+                    self.sendString(ser, targetStepString)
+                    time.sleep(0.01)
+                    receivedValues = self.readString(ser)
+                    self.passChecker(targetStepString, receivedValues)
 
-            #read encoder values
-            try:
-                receivedValues = self.readString(ser)
-                self.currentStep1.value = receivedValues[0]
-                self.currentStep2.value = receivedValues[1]
-                self.currentStep3.value = receivedValues[2]
-                self.currentStep4.value = receivedValues[3]
-            except:
-                pass
+                #read encoder values
+                try:
+                    receivedValues = self.readString(ser)
+                    self.currentStep1.value = receivedValues[0]
+                    self.currentStep2.value = receivedValues[1]
+                    self.currentStep3.value = receivedValues[2]
+                    self.currentStep4.value = receivedValues[3]
+                except:
+                    pass
+        except KeyboardInterrupt:
+            pass
+        finally:
+            ser.close()
+
     
     def passChecker(self, targetStepString, receivedValues):
         # print('pass checker values:')

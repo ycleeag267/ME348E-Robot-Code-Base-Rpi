@@ -24,3 +24,21 @@ class motorControl:
         self.targetStep2.value = targetList[1]
         self.targetStep3.value = targetList[2]
         self.targetStep4.value = targetList[3]
+
+    def moveForward(self, targetDistance):
+        self.targetStep1.value = targetDistance
+        self.targetStep2.value = -targetDistance
+        self.targetStep3.value = -targetDistance
+        self.targetStep4.value = targetDistance
+
+    def moveRight(self, targetDistance):
+        self.targetStep1.value = -targetDistance
+        self.targetStep2.value = targetDistance
+        self.targetStep3.value = -targetDistance
+        self.targetStep4.value = targetDistance
+
+    def rotate(self, targetDistance):
+        self.targetStep1.value = targetDistance
+        self.targetStep2.value = targetDistance
+        self.targetStep3.value = targetDistance
+        self.targetStep4.value = targetDistance

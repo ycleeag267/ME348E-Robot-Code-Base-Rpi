@@ -3,9 +3,10 @@ import time
 import numpy as np
 
 class arduinoComms:
-    def __init__(self, port, baud, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4):
+    def __init__(self, port, baud, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4):
         self.port = port
         self.baud = baud
+        self.exit_event = exit_event
         self.sendTarget = sendTarget
         self.targetStep1 = targetStep1
         self.targetStep2 = targetStep2
@@ -58,8 +59,8 @@ class arduinoComms:
         ser=serial.Serial(self.port, self.baud, timeout=1)
         print('serial connected')
         
-        try:
-            while True:
+        while not self.exit_event.is_set():
+            try:
                 #send motor values
                 if self.sendTarget.value:
                     self.sendTarget.value = False
@@ -80,12 +81,14 @@ class arduinoComms:
                     self.currentStep2.value = receivedValues[1]
                     self.currentStep3.value = receivedValues[2]
                     self.currentStep4.value = receivedValues[3]
+                except KeyboardInterrupt:
+                    self.exit_event.set()
                 except:
                     pass
-        except KeyboardInterrupt:
-            pass
-        finally:
-            ser.close()
+            except KeyboardInterrupt:
+                self.exit_event.set()
+        ser.close()
+        print('closing arduino Comms gracefully')
 
     
     def passChecker(self, targetStepString, receivedValues):

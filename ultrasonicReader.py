@@ -44,16 +44,18 @@ class ultrasonicReader:
     def iterateSensor(self):
         while not self.exit_event.is_set():
             try:
-                self.ultrasonicDistance.value = func_timeout(0.01, self.readSensor)
-                # time.sleep(0.1)
+                self.ultrasonicDistance.value = func_timeout(0.1, self.readSensor)
+                # time.sleep(0.01)
             # possibly delay here to allow for reasonable mutex acquisition
             except FunctionTimedOut:
-                print("Function timed out.")
+                print("", end="")
+                # print('timeout error')
             except Exception as e:
                 print(f"Function raised an exception: {e}")
             except KeyboardInterrupt:
                 self.exit_event.set()
-            
+        
+        GPIO.cleanup()
         print('closing ultrasonic reader gracefully')
 
 

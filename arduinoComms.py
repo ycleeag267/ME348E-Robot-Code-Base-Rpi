@@ -1,6 +1,7 @@
 import serial
 import time
 import numpy as np
+from func_timeout import FunctionTimedOut, func_timeout
 
 class arduinoComms:
     def __init__(self, port, baud, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4):
@@ -76,7 +77,8 @@ class arduinoComms:
 
                 #read encoder values
                 try:
-                    receivedValues = self.readString(ser)
+                    # receivedValues = self.readString(ser)
+                    receivedValues = func_timeout(0.05, self.readString, args = (ser,))
                     self.currentStep1.value = receivedValues[0]
                     self.currentStep2.value = receivedValues[1]
                     self.currentStep3.value = receivedValues[2]

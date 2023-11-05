@@ -35,8 +35,8 @@ class motorControl:
     def moveRight(self, targetDistance):
         self.sendTarget.value = True
         self.targetStep1.value = -targetDistance
-        self.targetStep2.value = targetDistance
-        self.targetStep3.value = -targetDistance
+        self.targetStep2.value = -targetDistance
+        self.targetStep3.value = targetDistance
         self.targetStep4.value = targetDistance
 
     def rotate(self, targetDistance):

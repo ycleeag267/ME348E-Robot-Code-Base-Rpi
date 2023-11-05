@@ -21,7 +21,7 @@ def inputSimulator(motorController, ultrasonicSensor):
 if __name__ == "__main__":
     #declaring serial variables
     # port = 'COM4'   #For PC
-    port = '/dev/ttyACM3'   #For Rpi
+    port = '/dev/ttyACM1'   #For Rpi
     baud_rate = 115200
 
     #declaring sensor variables

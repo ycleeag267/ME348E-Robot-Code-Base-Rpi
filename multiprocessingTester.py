@@ -51,7 +51,7 @@ if __name__ == "__main__":
     arduinoCommunication = arduinoComms(port, baud_rate, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
     motorController = motorControl(sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
     ultrasonicSensor = ultrasonicReader(exit_event, GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance)
-    decisionMaking = stateMachine(exit_event, motorController, ultrasonicSensor)
+    decisionMaking = stateMachine(exit_event, motorController, ultrasonicDistance)
 
     process1 = multiprocessing.Process(target=arduinoCommunication.maintainCommunications)
     process2 = multiprocessing.Process(target=ultrasonicSensor.iterateSensor)

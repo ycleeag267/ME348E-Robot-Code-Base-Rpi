@@ -87,6 +87,7 @@ class arduinoComms:
                     pass
             except KeyboardInterrupt:
                 self.exit_event.set()
+        
         ser.close()
         print('closing arduino Comms gracefully')
 

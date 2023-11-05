@@ -4,10 +4,11 @@ import time
 from func_timeout import FunctionTimedOut, func_timeout
 
 class ultrasonicReader:
-    def __init__(self, GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance):
+    def __init__(self, exit_event, GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance):
         self.GPIO_TRIGGER = GPIO_TRIGGER
         self.GPIO_ECHO = GPIO_ECHO
         self.ultrasonicDistance = ultrasonicDistance
+        self.exit_event = exit_event
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.GPIO_TRIGGER, GPIO.OUT)
@@ -41,7 +42,7 @@ class ultrasonicReader:
         return distance
 
     def iterateSensor(self):
-        while True:
+        while not self.exit_event.is_set():
             try:
                 self.ultrasonicDistance.value = func_timeout(0.1, self.readSensor)
                 print(self.ultrasonicDistance.value)
@@ -51,4 +52,9 @@ class ultrasonicReader:
                 print("Function timed out.")
             except Exception as e:
                 print(f"Function raised an exception: {e}")
+            except KeyboardInterrupt:
+                self.exit_event.set()
+            
+        print('closing arduino Comms gracefully')
+
 

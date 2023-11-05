@@ -3,6 +3,7 @@ import time
 from arduinoComms import arduinoComms
 from motorControl import motorControl
 from ultrasonicReader import ultrasonicReader
+from stateMachine import stateMachine
 
 def inputSimulator(motorController, ultrasonicSensor, exit_event):
     initialTime = time.time()
@@ -50,10 +51,11 @@ if __name__ == "__main__":
     arduinoCommunication = arduinoComms(port, baud_rate, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
     motorController = motorControl(sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
     ultrasonicSensor = ultrasonicReader(exit_event, GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance)
+    decisionMaking = stateMachine(exit_event, motorController, ultrasonicSensor)
 
     process1 = multiprocessing.Process(target=arduinoCommunication.maintainCommunications)
-    process2 = multiprocessing.Process(target=inputSimulator, args= (motorController, ultrasonicDistance, exit_event))
-    process3 = multiprocessing.Process(target=ultrasonicSensor.iterateSensor)
+    process2 = multiprocessing.Process(target=ultrasonicSensor.iterateSensor)
+    process3 = multiprocessing.Process(target=decisionMaking.iteratestates)
     
     process1.start()
     process2.start()

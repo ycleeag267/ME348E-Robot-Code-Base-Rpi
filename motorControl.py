@@ -18,6 +18,17 @@ class motorControl:
         reading[3] = self.currentStep4.value
         return reading
 
+    def moving(self):
+        if (self.currentStep1.value != 0):
+            return True
+        if (self.currentStep2.value != 0):
+            return True
+        if (self.currentStep3.value != 0):
+            return True
+        if (self.currentStep4.value != 0):
+            return True
+        return False
+
     def writeTargetSteps(self, targetList):
         self.sendTarget.value = True
         self.targetStep1.value = targetList[0]

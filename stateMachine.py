@@ -23,7 +23,7 @@ class stateMachine:
             reading = self.ultrasonicDistance.value
             if not (reading in read_values):
                 read_values.append(reading)
-            if len(reading)>= 5:
+            if len(read_values)>= 3:
                 if np.std(read_values)<standard_deviation:
                     return(np.mean(read_values))
                 else:
@@ -36,15 +36,16 @@ class stateMachine:
         current_distance = 999
         current_position = 0
         best_position = 0
-        step_size = 10
+        step_size = 25
         check_steps = 1000
         while exitflag:
             self.motorcontroller.rotate(step_size)
             current_position += step_size
-            while self.motorcontroller.moving():
-                pass
+            # while self.motorcontroller.moving():
+            #     pass
+            time.sleep(1)
             #check if new position is better 
-            current_distance = self.averageDistance
+            current_distance = self.averageDistance()
             print(f'current position: {current_position}, current distance: {current_distance}')
             if current_distance<best_distance:
                 best_distance = current_distance
@@ -60,8 +61,7 @@ class stateMachine:
         #rotate to the best location
         self.motorcontroller.rotate(-(current_position-best_position))
         #blocks for the moving to stop
-        while self.motorcontroller.moving():
-            pass
+        time.sleep(5)
 
         #set state to end
         self.current_state = -1

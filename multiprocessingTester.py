@@ -11,14 +11,14 @@ def inputSimulator(motorController, ultrasonicDistance, exit_event):
     while not exit_event.is_set(): 
         try:
             if (time.time()-initialTime>3):
-                #motorController.writeTargetSteps([1000, 1000, 1000, 1000])
-                motorController.moveRight (1000)
+                # motorController.writeTargetSteps([10, 10, 10, 10])
+                motorController.rotate(10)
                 initialTime = time.time()
 
             readings = motorController.readCurrentSteps()
             print(f'current steps: {readings[0]}, {readings[1]}, {readings[2]}, {readings[3]}')
-            print(f'ultrasonic distance reading: {ultrasonicDistance.value}')
-            time.sleep(0.1)
+            # print(f'ultrasonic distance reading: {ultrasonicDistance.value}')
+            time.sleep(1)
         except KeyboardInterrupt:
             exit_event.set()
 

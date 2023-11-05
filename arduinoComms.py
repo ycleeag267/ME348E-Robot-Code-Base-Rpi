@@ -73,18 +73,21 @@ class arduinoComms:
                     self.sendString(ser, targetStepString)
                     time.sleep(0.01)
                     receivedValues = self.readString(ser)
+                    #return value is not needed, it alters the sendTarget value!
                     self.passChecker(targetStepString, receivedValues)
+                    # print('wrote some values')
 
                 #read encoder values
                 try:
-                    # receivedValues = self.readString(ser)
-                    receivedValues = func_timeout(0.05, self.readString, args = (ser,))
+                    receivedValues = self.readString(ser)
                     self.currentStep1.value = receivedValues[0]
                     self.currentStep2.value = receivedValues[1]
                     self.currentStep3.value = receivedValues[2]
                     self.currentStep4.value = receivedValues[3]
                 except KeyboardInterrupt:
                     self.exit_event.set()
+                except FunctionTimedOut:
+                    print('serial read timed out')
                 except:
                     pass
             except KeyboardInterrupt:

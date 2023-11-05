@@ -1,3 +1,5 @@
+import time
+
 class motorControl:
     def __init__(self, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4):
         self.sendTarget = sendTarget
@@ -19,6 +21,7 @@ class motorControl:
         return reading
 
     def moving(self):
+        time.sleep(0.1)
         if (self.currentStep1.value != 0):
             return True
         if (self.currentStep2.value != 0):

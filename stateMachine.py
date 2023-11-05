@@ -1,4 +1,5 @@
 import time
+import numpy as np
 
 class stateMachine:
     def __init__(self, exit_event, motorcontroller, ultrasonicDistance):
@@ -15,6 +16,19 @@ class stateMachine:
             print(self.ultrasonicDistance.value)
             time.sleep(0.01)
 
+    def averageDistance(self):
+        read_values=[]
+        standard_deviation = 5
+        while True:
+            reading = self.ultrasonicDistance.value
+            if not (reading in read_values):
+                read_values.append(reading)
+            if len(reading)>= 5:
+                if np.std(read_values)<standard_deviation:
+                    return(np.mean(read_values))
+                else:
+                    read_values=[]
+
     def findbackwall(self):
         print('in back wall')
         exitflag = True
@@ -30,7 +44,7 @@ class stateMachine:
             while self.motorcontroller.moving():
                 pass
             #check if new position is better 
-            current_distance = self.ultrasonicDistance.value
+            current_distance = self.averageDistance
             print(f'current position: {current_position}, current distance: {current_distance}')
             if current_distance<best_distance:
                 best_distance = current_distance

@@ -1,14 +1,15 @@
 class stateMachine:
-    def __init__(self, exit_event, motorcontroller, ultrasonicsensor):
+    def __init__(self, exit_event, motorcontroller, ultrasonicDistance):
         self.exit_event = exit_event
         self.motorcontroller = motorcontroller
-        self.ultrasonicsensor = ultrasonicsensor
+        self.ultrasonicDistance = ultrasonicDistance
         self.current_state = 0
 
         #define the list of 
         self.states = [self.findbackwall, self.stopMachine]
 
     def findbackwall(self):
+        print('in back wall')
         exitflag = True
         best_distance = 999
         current_distance = 999
@@ -23,7 +24,7 @@ class stateMachine:
                 pass
 
             #check if new position is better 
-            current_distance = self.ultrasonicsensor.value
+            current_distance = self.ultrasonicDistance.value
             if current_position<best_distance:
                 best_distance = current_distance
                 best_position = current_position

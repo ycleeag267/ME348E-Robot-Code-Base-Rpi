@@ -48,6 +48,8 @@ class arduinoComms:
             targetStepString[2]= self.targetStep3.value
             targetStepString[3]= self.targetStep4.value
             self.sendString(targetStepString)
+            sendTime = time.time()
+            
 
         #read encoder values
         receivedValues = self.readString()
@@ -55,6 +57,7 @@ class arduinoComms:
         self.currentStep2.value = receivedValues[1]
         self.currentStep3.value = receivedValues[2]
         self.currentStep4.value = receivedValues[3]
+        print(f'current steps: {self.currentStep1.value}, {self.currentStep2.value}, {self.currentStep3.value}, {self.currentStep4.value} at {time.time()-sendTime}')
 
     def maintainCommunications(self):
         ser=serial.Serial(self.port, self.baud, timeout=1)
@@ -64,18 +67,21 @@ class arduinoComms:
             #send motor values
             if self.sendTarget.value:
                 try:
-                    self.sendTarget.value = False
                     targetStepString = [0, 0, 0, 0]
                     targetStepString[0]= self.targetStep1.value
                     targetStepString[1]= self.targetStep2.value
                     targetStepString[2]= self.targetStep3.value
                     targetStepString[3]= self.targetStep4.value
                     self.sendString(ser, targetStepString)
-                    time.sleep(0.01)
+                    # time.sleep(0.01)
+                    print('string sent')
                     receivedValues = self.readString(ser)
+                    print(f'received values: {receivedValues}')
                     #return value is not needed, it alters the sendTarget value!
+                    self.sendTarget.value = False
                     self.passChecker(targetStepString, receivedValues)
                     # print('wrote some values')
+                    sendTime = time.time()
                 except KeyboardInterrupt:
                     self.exit_event.set()
                 except:
@@ -88,6 +94,7 @@ class arduinoComms:
                 self.currentStep2.value = receivedValues[1]
                 self.currentStep3.value = receivedValues[2]
                 self.currentStep4.value = receivedValues[3]
+                # print(f'current steps: {self.currentStep1.value}, {self.currentStep2.value}, {self.currentStep3.value}, {self.currentStep4.value} at {time.time()-sendTime}')
             except KeyboardInterrupt:
                 self.exit_event.set()
             except FunctionTimedOut:

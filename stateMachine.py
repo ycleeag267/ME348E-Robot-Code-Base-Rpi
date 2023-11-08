@@ -36,8 +36,8 @@ class stateMachine:
         current_distance = 999
         current_position = 0
         best_position = 0
-        step_size = 25
-        check_steps = 1000
+        step_size = 50
+        check_steps = 1600
         while exitflag:
             self.motorcontroller.rotate(step_size)
             current_position += step_size

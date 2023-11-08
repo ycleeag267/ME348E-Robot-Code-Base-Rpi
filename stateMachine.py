@@ -71,15 +71,15 @@ class stateMachine:
 
     def moveforward(self):
         #move back to square bot
-        self.motorcontroller.moveRight(200)
-        time.sleep(1)
+        self.motorcontroller.moveRight(400)
+        time.sleep(1.5)
 
         #move forward 
-        self.motorcontroller.moveRight(-800)
+        self.motorcontroller.moveRight(-1600)
         time.sleep(4)
 
         #square up with corner
-        self.motorcontroller.moveForward(400)
+        self.motorcontroller.moveForward(800)
         time.sleep(2)
 
         #set state to end

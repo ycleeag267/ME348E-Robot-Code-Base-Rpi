@@ -9,7 +9,7 @@ class stateMachine:
         self.current_state = 0
 
         #define the list of 
-        self.states = [self.findbackwall, self.stopMachine]
+        self.states = [self.findbackwall, self.moveforward, self.stopMachine]
 
     def testSensor(self):
         while True:
@@ -65,6 +65,22 @@ class stateMachine:
         time.sleep(5)
         self.motorcontroller.rotate(rotate_steps)
         time.sleep(5)
+
+        #set state to next module
+        self.current_state = 1
+
+    def moveforward(self):
+        #move back to square bot
+        self.motorcontroller.moveRight(200)
+        time.sleep(1)
+
+        #move forward 
+        self.motorcontroller.moveRight(-800)
+        time.sleep(4)
+
+        #square up with corner
+        self.motorcontroller.moveForward(400)
+        time.sleep(2)
 
         #set state to end
         self.current_state = -1

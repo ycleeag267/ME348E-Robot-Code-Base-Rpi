@@ -61,9 +61,9 @@ class arduinoComms:
         print('serial connected')
         
         while not self.exit_event.is_set():
-            try:
-                #send motor values
-                if self.sendTarget.value:
+            #send motor values
+            if self.sendTarget.value:
+                try:
                     self.sendTarget.value = False
                     targetStepString = [0, 0, 0, 0]
                     targetStepString[0]= self.targetStep1.value
@@ -76,22 +76,24 @@ class arduinoComms:
                     #return value is not needed, it alters the sendTarget value!
                     self.passChecker(targetStepString, receivedValues)
                     # print('wrote some values')
-
-                #read encoder values
-                try:
-                    receivedValues = self.readString(ser)
-                    self.currentStep1.value = receivedValues[0]
-                    self.currentStep2.value = receivedValues[1]
-                    self.currentStep3.value = receivedValues[2]
-                    self.currentStep4.value = receivedValues[3]
                 except KeyboardInterrupt:
                     self.exit_event.set()
-                except FunctionTimedOut:
-                    print('serial read timed out')
                 except:
                     pass
+
+            #read encoder values
+            try:
+                receivedValues = self.readString(ser)
+                self.currentStep1.value = receivedValues[0]
+                self.currentStep2.value = receivedValues[1]
+                self.currentStep3.value = receivedValues[2]
+                self.currentStep4.value = receivedValues[3]
             except KeyboardInterrupt:
                 self.exit_event.set()
+            except FunctionTimedOut:
+                print('serial read timed out')
+            except:
+                pass
         
         ser.close()
         print('closing arduino Comms gracefully')

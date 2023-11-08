@@ -37,13 +37,14 @@ class stateMachine:
         current_position = 0
         best_position = 0
         step_size = 50
-        check_steps = 1600
+        check_steps = 1750
+        rotate_steps = 900
         while exitflag:
             self.motorcontroller.rotate(step_size)
             current_position += step_size
             # while self.motorcontroller.moving():
             #     pass
-            time.sleep(1)
+            time.sleep(0.8)
             #check if new position is better 
             current_distance = self.averageDistance()
             print(f'current position: {current_position}, current distance: {current_distance}')
@@ -61,6 +62,8 @@ class stateMachine:
         #rotate to the best location
         self.motorcontroller.rotate(-(current_position-best_position))
         #blocks for the moving to stop
+        time.sleep(5)
+        self.motorcontroller.rotate(rotate_steps)
         time.sleep(5)
 
         #set state to end

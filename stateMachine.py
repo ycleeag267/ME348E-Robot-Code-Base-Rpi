@@ -48,7 +48,7 @@ class stateMachine:
             time.sleep(2)
             self.shooter()
             #reset travel
-            self.motorcontroller.moveForward(1100)
+            self.motorcontroller.moveForward(1350)
             time.sleep(4)
             #re-square
             self.motorcontroller.moveRight(-100)
@@ -102,9 +102,9 @@ class stateMachine:
         #rotate to the best location
         self.motorcontroller.rotate(-(current_position-best_position))
         #blocks for the moving to stop
-        time.sleep(5)
+        time.sleep(3)
         self.motorcontroller.rotate(rotate_steps)
-        time.sleep(5)
+        time.sleep(3)
 
         #set state to next module
         self.current_state = 1

@@ -14,16 +14,12 @@ class irSensor:
         #returns true if detected, false if ir beacon is not detected
         return ir_value
 
-    def averageRead(self):
-        truth_state = 0
-        samples = 5
-        for i in range(samples):
-            time.sleep(0.05)
-            truth_state += self.readSensor()
-
-        truth_state = round(truth_state/samples)
-
-        return truth_state
+    def timeRead(self):
+        initial_time = time.time()
+        while (time.time()-initial_time<1):
+            if self.readSensor():
+                return True
+        return False
 
 
 

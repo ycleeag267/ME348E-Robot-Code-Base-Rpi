@@ -31,6 +31,10 @@ class stateMachine:
                     read_values=[]
 
     def traverse(self):
+        #re-square
+        self.motorcontroller.moveRight(-100)
+        time.sleep(0.5)
+        
         #set wall range
         self.wallRange = self.averageDistance()+5 
         
@@ -64,10 +68,11 @@ class stateMachine:
         self.ammo = self.ammo -1
 
     def shootPuck(self):
+        print('shooting!!!!!')
         self.motorcontroller.moveRight(50)
-        time.sleep(0.5)
+        time.sleep(1)
         self.motorcontroller.moveRight(-50)
-        time.sleep(0.5)
+        time.sleep(1)
 
     def findbackwall(self):
         print('in back wall')

@@ -1,4 +1,4 @@
-import time
+from time import time
 import numpy as np
 import RPi.GPIO as GPIO
 
@@ -22,7 +22,7 @@ class irSensor:
             truth_state += self.readSensor()
 
         truth_state = round(truth_state/samples)
-        
+
         return truth_state
 
 

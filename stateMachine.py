@@ -32,8 +32,8 @@ class stateMachine:
 
     def traverse(self):
         #re-square
-        self.motorcontroller.moveRight(-100)
-        time.sleep(0.5)
+        self.motorcontroller.moveRight(-150)
+        time.sleep(0.8)
         
         #set wall range
         self.wallRange = self.averageDistance()+5 

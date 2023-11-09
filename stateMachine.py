@@ -7,9 +7,10 @@ class stateMachine:
         self.motorcontroller = motorcontroller
         self.ultrasonicDistance = ultrasonicDistance
         self.current_state = 0
+        self.ammo = 10
 
         #define the list of 
-        self.states = [self.findbackwall, self.moveforward, self.stopMachine]
+        self.states = [self.findbackwall, self.moveforward, self.traverse, self.stopMachine]
 
     def testSensor(self):
         while True:
@@ -28,6 +29,42 @@ class stateMachine:
                     return(np.mean(read_values))
                 else:
                     read_values=[]
+
+    def traverse(self):
+        #set wall range
+        self.wallRange = self.averageDistance()+5 
+        
+        while(self.ammo>0):
+            #travel to first beacon
+            self.motorcontroller.moveForward(-200)
+            time.sleep(1)
+            self.shooter()
+            #travel to second beacon
+            self.motorcontroller.moveForward(-400)
+            time.sleep(2)
+            self.shooter()
+            #travel to third beacon
+            self.motorcontroller.moveForward(-400)
+            time.sleep(2)
+            self.shooter()
+            #reset travel
+            self.motorcontroller.moveForward(1100)
+            time.sleep(4)
+        
+        self.current_state = -1
+
+    def shooter(self):
+        #if ir true
+        if self.averageDistance()>self.wallRange:
+            self.shootPuck()
+        #tick ammo
+        self.ammo = self.ammo -1
+
+    def shootPuck(self):
+        self.motorcontroller.moveRight(50)
+        time.sleep(0.5)
+        self.motorcontroller.moveRight(-50)
+        time.sleep(0.5)
 
     def findbackwall(self):
         print('in back wall')
@@ -83,7 +120,7 @@ class stateMachine:
         time.sleep(2)
 
         #set state to end
-        self.current_state = -1
+        self.current_state = 2
     
     def stopMachine(self):
         print("in stop machine")

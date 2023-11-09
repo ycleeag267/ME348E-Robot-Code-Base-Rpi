@@ -1,5 +1,6 @@
 import time
 import numpy as np
+from irSensor import irSensor
 
 class stateMachine:
     def __init__(self, exit_event, motorcontroller, ultrasonicDistance):
@@ -8,6 +9,10 @@ class stateMachine:
         self.ultrasonicDistance = ultrasonicDistance
         self.current_state = 0
         self.ammo = 10
+        
+        #create ir sensor object
+        self.sensorPin = 14
+        self.ir_sensor = irSensor(self.sensorPin)
 
         #define the list of 
         self.states = [self.findbackwall, self.moveforward, self.traverse, self.stopMachine]
@@ -62,7 +67,7 @@ class stateMachine:
 
     def shooter(self):
         #if ir true
-        if self.averageDistance()>self.wallRange:
+        if (self.averageDistance()>self.wallRange and self.ir_sensor.averageRead()):
             self.shootPuck()
         #tick ammo
         self.ammo = self.ammo -1

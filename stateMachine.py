@@ -67,7 +67,7 @@ class stateMachine:
 
     def shooter(self):
         #if ir true
-        if (self.averageDistance()>self.wallRange and self.ir_sensor.timeRead()):
+        if (self.averageDistance()>self.wallRange and (self.ir_sensor.averageRead()>0.02)):
             self.shootPuck()
         #tick ammo
         self.ammo = self.ammo -1

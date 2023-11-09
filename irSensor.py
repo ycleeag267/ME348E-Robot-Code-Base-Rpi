@@ -18,6 +18,7 @@ class irSensor:
         truth_state = 0
         samples = 50
         for i in range(samples):
+            time.sleep(0.01)
             truth_state += self.readSensor()
 
         # truth_state = round(truth_state/samples)

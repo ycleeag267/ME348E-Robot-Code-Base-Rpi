@@ -36,20 +36,23 @@ class stateMachine:
         
         while(self.ammo>0):
             #travel to first beacon
-            self.motorcontroller.moveForward(-200)
+            self.motorcontroller.moveForward(-250)
             time.sleep(1)
             self.shooter()
             #travel to second beacon
-            self.motorcontroller.moveForward(-400)
+            self.motorcontroller.moveForward(-500)
             time.sleep(2)
             self.shooter()
             #travel to third beacon
-            self.motorcontroller.moveForward(-400)
+            self.motorcontroller.moveForward(-500)
             time.sleep(2)
             self.shooter()
             #reset travel
             self.motorcontroller.moveForward(1100)
             time.sleep(4)
+            #re-square
+            self.motorcontroller.moveRight(-100)
+            time.sleep(0.5)
         
         self.current_state = -1
 

@@ -4,7 +4,7 @@ import numpy as np
 from func_timeout import FunctionTimedOut, func_timeout
 
 class arduinoComms:
-    def __init__(self, port, baud, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4):
+    def __init__(self, port, baud, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, ShootCommand, currentStep1, currentStep2, currentStep3, currentStep4, currentShoot):
         self.port = port
         self.baud = baud
         self.exit_event = exit_event
@@ -13,10 +13,14 @@ class arduinoComms:
         self.targetStep2 = targetStep2
         self.targetStep3 = targetStep3
         self.targetStep4 = targetStep4
+        #shoot command variable added
+        self.ShootCommand = ShootCommand
         self.currentStep1 = currentStep1
         self.currentStep2 = currentStep2
         self.currentStep3 = currentStep3
         self.currentStep4 = currentStep4
+        #current shoot state of arduino
+        self.currentShoot = currentShoot
 
         #declared constants
         self.serial_delay = 0.001
@@ -39,14 +43,17 @@ class arduinoComms:
             return [0, 0, 0, 0]
 
     def updateMotors(self):
-        #send motor values
+        #send motor values and shooting command
         if self.sendTarget.value:
             self.sendTarget.value = False
-            targetStepString = [0, 0, 0, 0]
+            #4 motors and 1 shooting command = 5 values in string
+            targetStepString = [0, 0, 0, 0, 0]
             targetStepString[0]= self.targetStep1.value
             targetStepString[1]= self.targetStep2.value
             targetStepString[2]= self.targetStep3.value
             targetStepString[3]= self.targetStep4.value
+            #shooting command in string
+            targetStepString[4]= self.ShootCommand.value
             self.sendString(targetStepString)
             sendTime = time.time()
             
@@ -57,7 +64,9 @@ class arduinoComms:
         self.currentStep2.value = receivedValues[1]
         self.currentStep3.value = receivedValues[2]
         self.currentStep4.value = receivedValues[3]
-        print(f'current steps: {self.currentStep1.value}, {self.currentStep2.value}, {self.currentStep3.value}, {self.currentStep4.value} at {time.time()-sendTime}')
+        #read shooting state value
+        self.currentShoot.value = receivedValues[3]
+        print(f'current steps: {self.currentStep1.value}, {self.currentStep2.value}, {self.currentStep3.value}, {self.currentStep4.value}, {self.currentShoot.value} at {time.time()-sendTime}')
 
     def maintainCommunications(self):
         ser=serial.Serial(self.port, self.baud, timeout=1)
@@ -67,11 +76,13 @@ class arduinoComms:
             #send motor values
             if self.sendTarget.value:
                 try:
-                    targetStepString = [0, 0, 0, 0]
+                    #4 motors and 1 shooting command = 5 values in string
+                    targetStepString = [0, 0, 0, 0, 0]
                     targetStepString[0]= self.targetStep1.value
                     targetStepString[1]= self.targetStep2.value
                     targetStepString[2]= self.targetStep3.value
                     targetStepString[3]= self.targetStep4.value
+                    targetStepString[4]= self.ShootCommand.value
                     self.sendString(ser, targetStepString)
                     # time.sleep(0.01)
                     print('string sent')

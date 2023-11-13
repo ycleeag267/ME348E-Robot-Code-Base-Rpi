@@ -3,7 +3,7 @@ import numpy as np
 from irSensor import irSensor
 
 class stateMachine:
-    def __init__(self, exit_event, motorcontroller, ultrasonicDistance):
+    def __init__(self, exit_event, motorcontroller, ultrasonicDistance, LoadShooter):
         self.exit_event = exit_event
         self.motorcontroller = motorcontroller
         self.ultrasonicDistance = ultrasonicDistance
@@ -13,6 +13,9 @@ class stateMachine:
         #create ir sensor object
         self.sensorPin = 14
         self.ir_sensor = irSensor(self.sensorPin)
+        
+        #shooting and loading object
+        self.LoadShooter = LoadShooter
 
         #define the list of 
         self.states = [self.findbackwall, self.moveforward, self.traverse, self.stopMachine]
@@ -75,6 +78,8 @@ class stateMachine:
 
     def shootPuck(self):
         print('shooting!!!!!')
+        #command arduino to shoot
+        self.LoadShooter.shoot()
         self.motorcontroller.moveRight(50)
         time.sleep(1)
         self.motorcontroller.moveRight(-50)

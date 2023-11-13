@@ -4,7 +4,7 @@ import numpy as np
 from func_timeout import FunctionTimedOut, func_timeout
 
 class arduinoComms:
-    def __init__(self, port, baud, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, ShootCommand, currentStep1, currentStep2, currentStep3, currentStep4, currentShoot):
+    def __init__(self, port, baud, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, ShootCommand, currentStep1, currentStep2, currentStep3, currentStep4):
         self.port = port
         self.baud = baud
         self.exit_event = exit_event
@@ -19,8 +19,6 @@ class arduinoComms:
         self.currentStep2 = currentStep2
         self.currentStep3 = currentStep3
         self.currentStep4 = currentStep4
-        #current shoot state of arduino
-        self.currentShoot = currentShoot
 
         #declared constants
         self.serial_delay = 0.001
@@ -64,9 +62,7 @@ class arduinoComms:
         self.currentStep2.value = receivedValues[1]
         self.currentStep3.value = receivedValues[2]
         self.currentStep4.value = receivedValues[3]
-        #read shooting state value
-        self.currentShoot.value = receivedValues[3]
-        print(f'current steps: {self.currentStep1.value}, {self.currentStep2.value}, {self.currentStep3.value}, {self.currentStep4.value}, {self.currentShoot.value} at {time.time()-sendTime}')
+        print(f'current steps: {self.currentStep1.value}, {self.currentStep2.value}, {self.currentStep3.value}, {self.currentStep4.value} at {time.time()-sendTime}')
 
     def maintainCommunications(self):
         ser=serial.Serial(self.port, self.baud, timeout=1)

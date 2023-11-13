@@ -1,12 +1,11 @@
 import time
 
 class LoadShoot:
-    def __init__(self, ShootCommand, currentShoot):
+    def __init__(self, ShootCommand):
         self.ShootCommand = ShootCommand
-        self.currentShoot = currentShoot
         
     def shoot(self):
-        self.ShootCommand.value = 1
+        self.ShootCommand.value +=1
         
         
             

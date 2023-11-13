@@ -52,14 +52,13 @@ if __name__ == "__main__":
     currentStep2 = multiprocessing.Value('i', 0)
     currentStep3 = multiprocessing.Value('i', 0)
     currentStep4 = multiprocessing.Value('i', 0)
-    currentShoot = multiprocessing.Value('i', 0)
     ultrasonicDistance = multiprocessing.Value('d', 9999)
 
     #declare class objects
-    arduinoCommunication = arduinoComms(port, baud_rate, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, ShootCommand, currentStep1, currentStep2, currentStep3, currentStep4, currentShoot)
+    arduinoCommunication = arduinoComms(port, baud_rate, exit_event, sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, ShootCommand, currentStep1, currentStep2, currentStep3, currentStep4)
     motorController = motorControl(sendTarget, targetStep1, targetStep2, targetStep3, targetStep4, currentStep1, currentStep2, currentStep3, currentStep4)
     #declare loading and shooting object
-    LoadShooter = LoadShoot(ShootCommand,currentShoot)
+    LoadShooter = LoadShoot(ShootCommand)
     ultrasonicSensor = ultrasonicReader(exit_event, GPIO_TRIGGER, GPIO_ECHO, ultrasonicDistance)
     decisionMaking = stateMachine(exit_event, motorController, ultrasonicDistance, LoadShooter)
 

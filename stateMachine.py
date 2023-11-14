@@ -80,9 +80,9 @@ class stateMachine:
         print('shooting!!!!!')
         #command arduino to shoot
         self.LoadShooter.shoot()
-        self.motorcontroller.moveRight(50)
-        time.sleep(1)
-        self.motorcontroller.moveRight(-50)
+        # self.motorcontroller.moveRight(50)
+        # time.sleep(1)
+        # self.motorcontroller.moveRight(-50)
         time.sleep(1)
 
     def findbackwall(self):

@@ -38,7 +38,7 @@ class arduinoComms:
             return integer_list
         except:
             print('error reading string from arduino')
-            return [0, 0, 0, 0]
+            return [0, 0, 0, 0, 0]
 
     def updateMotors(self):
         #send motor values and shooting command
@@ -133,6 +133,10 @@ class arduinoComms:
             self.sendTarget.value = True
             return False
         if (abs(targetStepString[3]-receivedValues[3])>margin):
+            # print('target step was written incorrectly!')
+            self.sendTarget.value = True
+            return False
+        if (targetStepString[4] == receivedValues[4]):
             # print('target step was written incorrectly!')
             self.sendTarget.value = True
             return False

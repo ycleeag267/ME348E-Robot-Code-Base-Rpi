@@ -136,10 +136,6 @@ class arduinoComms:
             # print('target step was written incorrectly!')
             self.sendTarget.value = True
             return False
-        if (targetStepString[4] == receivedValues[4]):
-            # print('target step was written incorrectly!')
-            self.sendTarget.value = True
-            return False
         
         #if it reaches here, then the sent and received steps agree within margin
         return True

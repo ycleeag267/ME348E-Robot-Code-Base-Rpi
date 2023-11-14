@@ -79,9 +79,10 @@ class stateMachine:
     def shootPuck(self):
         print('shooting!!!!!')
         #command arduino to shoot
+        self.motorcontroller.moveRight(10)
+        time.sleep(1)
         self.LoadShooter.shoot()
-        # self.motorcontroller.moveRight(50)
-        # time.sleep(1)
+       
         # self.motorcontroller.moveRight(-50)
         time.sleep(1)
 
